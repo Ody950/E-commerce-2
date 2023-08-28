@@ -25,5 +25,6 @@ namespace E_commerce_2.Controllers
 
             return View(category);
         }
+
     }
 }
