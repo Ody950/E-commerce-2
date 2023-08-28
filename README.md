@@ -17,4 +17,4 @@ It is an e-commerce website built for the sale of products online. Throughout th
 
 
 ## ER  Diagram
-(https://i.imgur.com/q3TE6BC.png)
+[Read-Lab 19](https://i.imgur.com/q3TE6BC.png)
