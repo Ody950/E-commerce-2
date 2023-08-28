@@ -17,4 +17,4 @@ It is an e-commerce website built for the sale of products online. Throughout th
 
 
 ## ER  Diagram
-<img src="[./E-commerce-2/wwwroot/Image/1.jpg](https://i.imgur.com/q3TE6BC.png)https://i.imgur.com/q3TE6BC.png" style="width: 1000px;">
+(https://i.imgur.com/q3TE6BC.png)
