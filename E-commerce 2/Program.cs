@@ -1,0 +1,45 @@
+using E_commerce_2.Data;
+using E_commerce_2.Models.Interface;
+using E_commerce_2.Models.Services;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+string connString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services
+    .AddDbContext<TheMarketDBContext>
+(opions => opions.UseSqlServer(connString));
+// Add services to the container.
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+
+
+builder.Services.AddTransient<ICategories, CategoriesServices>();
+builder.Services.AddTransient<IProduct, ProductService>();
+
+var app = builder.Build();
+
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();

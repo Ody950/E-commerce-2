@@ -1,0 +1,17 @@
+﻿@model E_commerce_2.Models.Categories
+
+
+<h1>Name : @Model.Name </h1>
+<br />
+<h1>Details : @Model.Description </h1>
+<br />
+@foreach (var item in Model.categoriesProducts)
+{
+    <h3>Name : @item.product.Name</h3>
+    <h3> Price : @item.product.Price</h3>
+    <h3> Description : @item.product.Description</h3>
+    <h3> ImageURL : @item.product.ImageURL</h3>
+    <h3> Description : @item.product.Description</h3>
+    <hr style="height:2px;width:400px;border-width:1;">
+}
+<hr />
