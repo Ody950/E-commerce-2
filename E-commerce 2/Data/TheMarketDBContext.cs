@@ -31,15 +31,15 @@ namespace E_commerce_2.Data
 
             modelBuilder.Entity<Product>().HasData(
 
-                new Product { Id = 1, Name = "Name1", ImageURL = new Uri("https://faststorestorage.blob.core.windows.net/images/R.jpg"), Price = 5, Description = "1111111111111111"},
-                new Product { Id = 2, Name = "Name2", ImageURL = new Uri("https://faststorestorage.blob.core.windows.net/images/R.jpg"), Price = 10, Description = "2222222222222222" },
-                new Product { Id = 3, Name = "Name3 ", ImageURL = new Uri("https://faststorestorage.blob.core.windows.net/images/R.jpg"), Price = 15, Description = "3333333333333333333"}
+                new Product { Id = 1, Name = "Name1", ImageURL = new Uri("https://odai.core.windows.net/images/.jpg"), Price = 5, Description = "1111111111111111"},
+                new Product { Id = 2, Name = "Name2", ImageURL = new Uri("https://odai.core.windows.net/images/.jpg"), Price = 10, Description = "2222222222222222" },
+                new Product { Id = 3, Name = "Name3 ", ImageURL = new Uri("https://odai.core.windows.net/images/.jpg"), Price = 15, Description = "3333333333333333333"}
                 
             );
 
             modelBuilder.Entity<Categories>().HasData(
-              new Categories { Id = 1, Name = "Beauty", Logo = new Uri("https://faststorestorage.blob.core.windows.net/images/R.jpg"), Description = "111111111111111111111111" },
-              new Categories { Id = 2, Name = "Clothes", Logo = new Uri("https://faststorestorage.blob.core.windows.net/images/R.jpg"), Description = "22222222222222222" }
+              new Categories { Id = 1, Name = "Beauty", Logo = new Uri("https://odai.core.windows.net/images/.jpg"), Description = "111111111111111111111111" },
+              new Categories { Id = 2, Name = "Clothes", Logo = new Uri("https://odai.core.windows.net/images/.jpg"), Description = "22222222222222222" }
              
 
             );
