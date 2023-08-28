@@ -8,12 +8,6 @@ It is an e-commerce website built for the sale of products online. Throughout th
 
 ---
 
-#|Title
----|-----
-1|[ER Diagram](#erd-diagram)
-2|[WireFrame](#wireframes)
-3|[WorkFlow](#workflow)
-
 
 
 ## ER  Diagram
