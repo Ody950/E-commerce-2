@@ -7,7 +7,7 @@ namespace E_commerce_2.Models
     {
         public int CategoriesId { get; set; }
         public int ProductId { get; set; }
-        public Categories categories { get; set; }
-        public Product product { get; set; }
+        public Categories? categories { get; set; }
+        public Product? product { get; set; }
     }
 }

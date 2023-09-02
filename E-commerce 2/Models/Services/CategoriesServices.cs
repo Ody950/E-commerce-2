@@ -1,5 +1,7 @@
 ﻿using E_commerce_2.Data;
 using E_commerce_2.Models.Interface;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_2.Models.Services
@@ -8,18 +10,32 @@ namespace E_commerce_2.Models.Services
     public class CategoriesServices : ICategories
     {
 
-        private readonly TheMarketDBContext _context;
+        private TheMarketDBContext _context;
 
         public CategoriesServices(TheMarketDBContext context)
         {
             _context = context;
         }
 
+
+
+        public async Task<List<CategoriesProduct>> GetAllProductsForCategory(int categoryId)
+        {
+            var productsForCategory = await _context.CategoriesProducts
+                .Include(pc => pc.product)
+                .Where(pc => pc.CategoriesId == categoryId)
+                .ToListAsync();
+
+            return productsForCategory;
+        }
+
+        
+
+
         public async Task<Product> AddProductToCategories(int categoriesId, Product product)
         {
 
             _context.Entry(product).State = EntityState.Added;
-
             await _context.SaveChangesAsync();
 
             CategoriesProduct categoryProduct = new CategoriesProduct()
@@ -31,20 +47,62 @@ namespace E_commerce_2.Models.Services
             _context.Entry(categoryProduct).State = EntityState.Added;
 
             await _context.SaveChangesAsync();
+
             return product;
+
         }
+
+        public async Task deleteProductFromCategories(int categoriesId, int productId)
+        {
+            // Find the category and product
+            var category = await _context.Categories
+                .Include(c => c.categoriesProducts)
+                .FirstOrDefaultAsync(x => x.Id == categoriesId);
+            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == productId);
+
+            if (category != null && product != null)
+            {
+                var associationToRemove = category.categoriesProducts
+                    .FirstOrDefault(cp => cp.ProductId == productId);
+
+                if (associationToRemove != null)
+                {
+                    category.categoriesProducts.Remove(associationToRemove);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+
+
+        public async Task<Categories> GetCategoryWithProducts(int categoryId)
+        {
+            return await _context.Categories
+                .Include(c => c.categoriesProducts)
+                    .ThenInclude(cp => cp.product)
+                .SingleOrDefaultAsync(c => c.Id == categoryId);
+        }
+
 
         public async Task<Categories> Create(Categories categories)
         {
-            _context.Entry(categories).State = EntityState.Added;
-
+             _context.Entry(categories).State = EntityState.Added;
             await _context.SaveChangesAsync();
             return categories;
         }
 
-        public async Task Delete(int id)
+       
+        public async Task Delete(int Id)
         {
-            Categories categories = await GetCategory(id); ;
+            Categories categories = await GetCategory(Id);
 
             if (categories != null)
             {
@@ -55,26 +113,24 @@ namespace E_commerce_2.Models.Services
 
         }
 
-        public Task deleteProductFromCategories(int categoriesId, int productId)
+        
+        public  async Task<List<Categories>> GetCategories()
         {
-            throw new NotImplementedException();
+            return await _context.Categories.ToListAsync();
         }
 
-        public async Task<List<Categories>> GetCategories()
+        public async Task<Categories> GetCategory(int Id)
         {
-            return await _context.Categories.Include(x => x.categoriesProducts).ThenInclude(y => y.product).ToListAsync();
+            return await _context.Categories.FirstOrDefaultAsync(x => x.Id == Id);
         }
 
-        public async Task<Categories> GetCategory(int id)
-        {
-            return await _context.Categories.Include(x => x.categoriesProducts).ThenInclude(y => y.product).FirstOrDefaultAsync(z => z.Id == id);
-        }
-
-        public async Task<Categories> UpdateCategories(int id, Categories categories)
+            public async Task<Categories> UpdateCategories(int id, Categories categories)
         {
             _context.Entry(categories).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return categories;
         }
+
+        
     }
 }

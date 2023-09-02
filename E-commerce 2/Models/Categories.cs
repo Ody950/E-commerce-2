@@ -1,4 +1,8 @@
-﻿namespace E_commerce_2.Models
+﻿
+using E_commerce_2.Models;
+
+
+namespace E_commerce_2.Models
 {
     public class Categories
     {
@@ -7,7 +11,10 @@
         public Uri Logo { get; set; }
         public string Description { get; set; }
 
-        public List<CategoriesProduct> categoriesProducts { get; set; }
+        // Navigation Proparites
+
+        public List<CategoriesProduct>? categoriesProducts { get; set; }
+
 
     }
 }

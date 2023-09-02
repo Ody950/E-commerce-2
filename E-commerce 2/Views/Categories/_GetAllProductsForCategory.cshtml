@@ -1,0 +1,70 @@
+﻿@model List<E_commerce_2.Models.CategoriesProduct>
+
+@if (Model.Any())
+{
+    if (Model.First().CategoriesId != null)
+    {
+        @Html.ActionLink("Category Details", "Details", "Categories", new { id = Model.First().CategoriesId }, new { @class = "btn btn-primary" })
+
+        
+            ViewData["Title"] = "_GetAllProductsForCategory";
+        
+        <h1>Products for Selected Category</h1>
+
+        <div class="_GetAllProductsForCategory-buttons">
+            <form asp-controller="Categories" asp-action="_GetAllProductsForCategory" method="post">
+                <input type="hidden" name="categoryId" value="@Model.First().CategoriesId" />
+                <select name="sortOrder">
+                    <option value="HighToLowPrice">High to Low Price</option>
+                    <option value="LowToHighPrice">Low to High Price</option>
+                    <option value="OrderByAlphaBetAsend">OrderByAlphaBetAsend</option>
+                    <option value="OrderByAlphaBetDesend">OrderByAlphaBetDesend</option>
+                </select>
+                <button type="submit">Sort</button>
+            </form>
+        </div>
+
+        <div class="row">
+            <h4>Categories Products</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Product ImageURL</th>
+                        <th>Product Price</th>
+                        <th>Product Amount</th>
+                        <th>Product Description</th>
+                        <th>Remove From Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model)
+                    {
+                        <tr>
+                            <td>@(product.product != null ? product.product.Name : "N/A")</td>
+                            <td>@(product.product != null ? product.product.ImageURL : "N/A")</td>
+                            <td>@(product.product != null ? product.product.Price : "N/A")</td>
+                            <td>@(product.product != null ? product.product.Amount : "N/A")</td>
+                            <td>@(product.product != null ? product.product.Description : "N/A")</td>
+                            <td>
+                                <a asp-controller="Categories" asp-action="RemoveProductFromCategory" asp-route-CategoryId="@product.CategoriesId" asp-route-productId="@product.product.Id">Remove</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+    }
+    else
+    {
+        <p>No category information available.</p>
+    }
+}
+else
+{
+    <p>No products available for this category.</p>
+}
