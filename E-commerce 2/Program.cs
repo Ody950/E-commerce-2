@@ -19,6 +19,9 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 builder.Services.AddTransient<ICategories, CategoriesServices>();
 builder.Services.AddTransient<IProduct, ProductService>();
+builder.Services.AddTransient<ICategoriesProduct, CategoriesProductService>();
+
+
 
 var app = builder.Build();
 

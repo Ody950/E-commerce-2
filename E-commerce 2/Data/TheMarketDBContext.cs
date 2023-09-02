@@ -15,18 +15,47 @@ namespace E_commerce_2.Data
         public DbSet<Categories> Categories { get; set; }
         public DbSet<CategoriesProduct> CategoriesProducts { get; set; }
         public DbSet<Product> Products { get; set; }
-        
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartProduct> CartsProducts { get; set; }
+        public DbSet<OrderProduct> OrdersProducts { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             base.OnModelCreating(modelBuilder);
-           
-            modelBuilder.Entity<CategoriesProduct>().HasKey
-             (x => new
-             {
-                 x.CategoriesId,
-                 x.ProductId
-             });
+
+
+
+
+            modelBuilder.Entity<CategoriesProduct>()
+        .HasKey(cp => new { cp.CategoriesId, cp.ProductId });
+
+            modelBuilder.Entity<CategoriesProduct>()
+                .HasOne(cp => cp.categories)
+                .WithMany(c => c.categoriesProducts)
+                .HasForeignKey(cp => cp.CategoriesId);
+
+            modelBuilder.Entity<CategoriesProduct>()
+                .HasOne(cp => cp.product)
+                .WithMany(p => p.categoriesProducts)
+                .HasForeignKey(cp => cp.ProductId);
+
+            
+            modelBuilder.Entity<CartProduct>().HasKey
+            (x => new
+            {
+                x.CartId,
+                x.ProductId
+            });
+            modelBuilder.Entity<OrderProduct>().HasKey
+            (x => new
+            {
+                x.OrderId,
+                x.ProductId
+            });
+
+            
 
 
             modelBuilder.Entity<Product>().HasData(
@@ -44,14 +73,15 @@ namespace E_commerce_2.Data
 
             );
 
+           
 
-            modelBuilder.Entity<CategoriesProduct>().HasData(
+            //modelBuilder.Entity<CategoriesProduct>().HasData(
 
-                new CategoriesProduct { CategoriesId = 1, ProductId = 1 },
-                new CategoriesProduct { CategoriesId = 1, ProductId = 2 },
-                 new CategoriesProduct { CategoriesId = 2, ProductId = 3 }
+            //    new CategoriesProduct { CategoriesId = 1, ProductId = 1 },
+            //    new CategoriesProduct { CategoriesId = 1, ProductId = 2 },
+            //     new CategoriesProduct { CategoriesId = 2, ProductId = 3 }
 
-                );
+            //    );
 
 
 
@@ -67,5 +97,6 @@ namespace E_commerce_2.Data
             };
             modelBuilder.Entity<IdentityRole>().HasData(role);
         }
+        public DbSet<E_commerce_2.Models.Cart> Cart { get; set; } = default!;
     }
 }
