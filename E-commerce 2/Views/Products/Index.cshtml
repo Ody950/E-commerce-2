@@ -1,8 +1,12 @@
 ﻿@model IEnumerable<E_commerce_2.Models.Product>
+@using Microsoft.AspNetCore.Identity
 
 @{
     ViewData["Title"] = "Index";
+    var isAdministrator = User.IsInRole("Administrator");
+    var isEditor = User.IsInRole("Editor");
 }
+
 
 <h1>Index</h1>
 
@@ -49,9 +53,16 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    @if (isEditor)
+                    {
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                    }
+                   
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    @if (isAdministrator)
+                    {
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
             </td>
         </tr>
 }

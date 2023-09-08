@@ -9,6 +9,8 @@ using E_commerce_2.Data;
 using E_commerce_2.Models;
 using E_commerce_2.Models.Interface;
 using E_commerce_2.Models.Services;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace E_commerce_2.Controllers
 {
@@ -70,6 +72,7 @@ namespace E_commerce_2.Controllers
         // POST: Categories1/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Logo,Description")] Categories categories)
@@ -83,6 +86,8 @@ namespace E_commerce_2.Controllers
             return View(categories);
         }
 
+
+        [Authorize(Roles = "Editor")]
         // GET: Categories/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
@@ -103,6 +108,7 @@ namespace E_commerce_2.Controllers
         // POST: Categories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Editor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([Bind("Id,Name,Logo,Description")] int Id, Categories categories)
@@ -155,6 +161,7 @@ namespace E_commerce_2.Controllers
         }
 
         // POST: Categories/Delete/5
+        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -182,7 +189,7 @@ namespace E_commerce_2.Controllers
 
 
         // GET: Products/Create
-
+        [Authorize(Roles = "Editor")]
         public IActionResult AddProductToCategories(int CategoryId)
         {
             CategoriesProduct categoryProduct = new CategoriesProduct()
@@ -192,6 +199,7 @@ namespace E_commerce_2.Controllers
 
             return View(categoryProduct);
         }
+        [Authorize(Roles = "Editor")]
         [HttpPost]
         public async Task<IActionResult> AddProductToCategories(CategoriesProduct categoryProduct)
         {
@@ -213,6 +221,7 @@ namespace E_commerce_2.Controllers
             return PartialView("_CategoryDropdown", categories);
         }
 
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> RemoveProductFromCategory(int CategoryId, int ProductId)
         {
             await _categories.deleteProductFromCategories(CategoryId, ProductId);

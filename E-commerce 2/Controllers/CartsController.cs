@@ -47,7 +47,7 @@ namespace E_commerce_2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CartDTO cartDTO)
         {
-          
+
             var newCart = await _cart.Create(cartDTO);
 
             return View(newCart);
@@ -61,7 +61,7 @@ namespace E_commerce_2.Controllers
                 return NotFound();
             }
 
-            var cart = await _cart.UpdateCart( id, upDateCartDTO);
+            var cart = await _cart.UpdateCart(id, upDateCartDTO);
             if (cart == null)
             {
                 return NotFound();
@@ -69,7 +69,7 @@ namespace E_commerce_2.Controllers
             return View(cart);
         }
 
-       
+
 
         //// GET: Carts/Delete/5
         //public async Task<IActionResult> Delete(int? id)
@@ -103,7 +103,7 @@ namespace E_commerce_2.Controllers
         //    {
         //        _context.Carts.Remove(cart);
         //    }
-            
+
         //    await _context.SaveChangesAsync();
         //    return RedirectToAction(nameof(Index));
         //}

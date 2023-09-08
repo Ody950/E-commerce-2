@@ -10,6 +10,8 @@ using E_commerce_2.Models;
 using E_commerce_2.Models.DTO;
 using E_commerce_2.Models.Interface;
 using Microsoft.CodeAnalysis;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace E_commerce_2.Controllers
 {
@@ -24,6 +26,7 @@ namespace E_commerce_2.Controllers
         }
 
         //GET: Products
+        
         public async Task<IActionResult> Index()
         {
             if(await _product.GetProducts() == null)
@@ -61,6 +64,7 @@ namespace E_commerce_2.Controllers
         // POST: Products/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,ImageURL,Price,Amount,Description")] Product product)
@@ -74,6 +78,8 @@ namespace E_commerce_2.Controllers
         }
 
         //GET: Products/Edit/5
+        [Authorize(Roles = "Editor")]
+
         public async Task<IActionResult> Edit(int id)
         {
             if (id == null || _product.GetProducts == null)
@@ -94,6 +100,8 @@ namespace E_commerce_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Editor")]
+
         public async Task<IActionResult> Edit([Bind("Id,Name,ImageURL,Price,Amount,Description")] int Id, Product product)
         {
             if (Id != product.Id)
@@ -145,6 +153,7 @@ namespace E_commerce_2.Controllers
 
 
         // POST: Products/Delete/5
+        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
