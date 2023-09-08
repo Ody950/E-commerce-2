@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using E_commerce_2.Auth.Models;
 
 namespace E_commerce_2.Data
 
 {
-    public class TheMarketDBContext : DbContext
+    public class TheMarketDBContext : IdentityDbContext<ApplicationUser>
     {
         public TheMarketDBContext(DbContextOptions options) : base(options)
         {
@@ -73,7 +74,7 @@ namespace E_commerce_2.Data
 
             );
 
-           
+
 
             //modelBuilder.Entity<CategoriesProduct>().HasData(
 
@@ -83,7 +84,9 @@ namespace E_commerce_2.Data
 
             //    );
 
-
+            SeedRole(modelBuilder, "Administrator");
+            SeedRole(modelBuilder, "Editor");
+            SeedRole(modelBuilder, "Users");
 
         }
         private void SeedRole(ModelBuilder modelBuilder, string roleName)
