@@ -67,15 +67,90 @@ namespace E_commerce_2.Controllers
         [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,ImageURL,Price,Amount,Description")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,ImageURL,Price,Amount,Description")] Product product, IFormFile file)
         {
-            if (ModelState.IsValid)
-            {
-                await _product.CreateProduct(product);
+
+                await _product.CreateProduct(product, file);
                 return RedirectToAction(nameof(Index));
+           
+        }
+
+
+
+
+
+
+
+
+        //GET: Products/ReplacePicture/5
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> ReplacePicture(int id)
+        {
+            if (id == null || _product.GetProducts == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _product.GetProduct(id);
+            if (product == null)
+            {
+                return NotFound();
             }
             return View(product);
         }
+
+        // POST: Products1/ReplacePicture/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Editor")]
+
+        public async Task<IActionResult> ReplacePicture(int Id, IFormFile file)
+        {
+          
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _product.ReplacePictureProduct(Id, file);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    var theProduct = await _product.GetProduct(Id);
+
+                    if (theProduct == null)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         //GET: Products/Edit/5
         [Authorize(Roles = "Editor")]

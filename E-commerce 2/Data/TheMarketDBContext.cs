@@ -9,7 +9,8 @@ namespace E_commerce_2.Data
 {
     public class TheMarketDBContext : IdentityDbContext<ApplicationUser>
     {
-        public TheMarketDBContext(DbContextOptions options) : base(options)
+
+            public TheMarketDBContext(DbContextOptions options) : base(options)
         {
         }
        
