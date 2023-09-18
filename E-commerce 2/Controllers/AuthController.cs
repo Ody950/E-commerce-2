@@ -2,6 +2,7 @@
 using E_commerce_2.Auth.Models.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using NuGet.Protocol.Plugins;
 
 namespace E_commerce_2.Controllers
 {
@@ -31,7 +32,7 @@ namespace E_commerce_2.Controllers
             {
                 //await _user.Authenticate(register.Username, register.Password);
                 //return Redirect("/Home/Index");
-                return user;
+                return RedirectToAction("Index", "Home", user);
 
             }
             else
@@ -55,18 +56,19 @@ namespace E_commerce_2.Controllers
             {
 
                 TempData["AlertMessage"] = $"Welcom {login.Username} in Fast Market Website :)";
-
-                return View("Index", login);
+                return RedirectToAction("Index", "Home", login);
+               
             }
 
         }
 
-        [HttpPost]
+        [Route("Logout")]
         public async Task<IActionResult> LogOut()
         {
             await _user.LogOut();
             return RedirectToAction("Index", "Home");
         }
+
 
         public void SetCookie(string v1, string v2)
         {

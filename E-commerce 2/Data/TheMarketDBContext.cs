@@ -28,8 +28,6 @@ namespace E_commerce_2.Data
             base.OnModelCreating(modelBuilder);
 
 
-
-
             modelBuilder.Entity<CategoriesProduct>()
         .HasKey(cp => new { cp.CategoriesId, cp.ProductId });
 
@@ -43,7 +41,14 @@ namespace E_commerce_2.Data
                 .WithMany(p => p.categoriesProducts)
                 .HasForeignKey(cp => cp.ProductId);
 
-            
+            modelBuilder.Entity<CategoriesProduct>().HasKey(
+               ProductsCategory => new
+               {
+                   ProductsCategory.CategoriesId,
+                   ProductsCategory.ProductId
+               }
+               );
+
             modelBuilder.Entity<CartProduct>().HasKey
             (x => new
             {

@@ -87,6 +87,11 @@ namespace E_commerce_2.Auth.Models.Services
 
         }
 
+        public async Task LogOut()
+        {
+            await _signInManager.SignOutAsync();
+        }
+
         public async Task<UserDTO> GetUser(ClaimsPrincipal principal)
         {
             var user = await _userManager.GetUserAsync(principal);
@@ -96,10 +101,7 @@ namespace E_commerce_2.Auth.Models.Services
                 Username = user.UserName,
             };
         }
-        public async Task LogOut()
-        {
-            await _signInManager.SignOutAsync();
-        }
+     
         public async Task<List<ApplicationUser>> getAll()
         {
             return await _userManager.Users.ToListAsync();

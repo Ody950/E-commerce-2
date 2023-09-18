@@ -1,28 +1,103 @@
 ﻿@model List<E_commerce_2.Models.CategoriesProduct>
 
+@{
+    ViewData["Title"] = "_GetAllProductsForCategory";
+    var isAdministrator = User.IsInRole("Administrator");
+    var isEditor = User.IsInRole("Editor");
+}
+
 @if (Model.Any())
 {
     if (Model.First().CategoriesId != null)
     {
-        @Html.ActionLink("Category Details", "Details", "Categories", new { id = Model.First().CategoriesId }, new { @class = "btn btn-primary" })
 
         
             ViewData["Title"] = "_GetAllProductsForCategory";
-        
-        <h1>Products for Selected Category</h1>
 
-        <div class="_GetAllProductsForCategory-buttons">
-            <form asp-controller="Categories" asp-action="_GetAllProductsForCategory" method="post">
-                <input type="hidden" name="categoryId" value="@Model.First().CategoriesId" />
-                <select name="sortOrder">
-                    <option value="HighToLowPrice">High to Low Price</option>
-                    <option value="LowToHighPrice">Low to High Price</option>
-                    <option value="OrderByAlphaBetAsend">OrderByAlphaBetAsend</option>
-                    <option value="OrderByAlphaBetDesend">OrderByAlphaBetDesend</option>
-                </select>
-                <button type="submit">Sort</button>
-            </form>
+        <div class="container mt-1 mb-5">
+            <div class="row align-items-center mt-3">
+                <!-- Add margin top (mt-3) for space -->
+                <div class="col-md-6">
+                    <h2 class="text-center text-secondary">In this category you will find</h2>
+                </div>
+
+                <div class="col-md-6">
+                    <form asp-controller="Categories" asp-action="_GetAllProductsForCategory" method="post">
+                        <div class="form-group row align-items-center">
+                            <div class="col-md-6">
+                                <input type="hidden" name="categoryId" value="@Model.First().CategoriesId" />
+                                <select name="sortOrder" class="form-control mb-2">
+                                    <option value="HighToLowPrice">High to Low Price</option>
+                                    <option value="LowToHighPrice">Low to High Price</option>
+                                    <option value="OrderByAlphaBetAsend">OrderByAlphaBetAsend</option>
+                                    <option value="OrderByAlphaBetDesend">OrderByAlphaBetDesend</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary btn-block">Sort</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
+
+
+        <div class="row mt-3 mb-3">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card border border-2 border-gray CStyle bg-light">
+                        <img src="@item.product.ImageURL" class="card-img-top product-image" alt="@item.product.Name">
+                        <div class="card-body">
+                            <h5 class="card-title text-center text-danger">@item.product.Name</h5>
+                            <p class="card-text text-center text-secondary">$@item.product.Price</p>
+                            <div class="btn-group d-flex" role="group" aria-label="Product Actions">
+                                @if (isEditor)
+                                {
+                                    <a class="btn btn-danger text-white" asp-controller="Products" asp-action="Edit" asp-route-id="@item.product.Id">Edit</a>
+                                }
+                                @if (isAdministrator)
+                                {
+                                    <a class="btn btn-danger text-white" asp-controller="Products" asp-action="ReplacePicture" asp-route-id="@item.product.Id">Replace Picture</a>
+                                }
+                                <a class="btn btn-danger text-white" asp-controller="Products" asp-action="Details" asp-route-id="@item.product.Id">Details</a>
+                                @if (isAdministrator)
+                                {
+                                    <a href="@Url.Action("RemoveProductFromCategory", "Categories", new { CategoryId = @item.categories.Id, ProductId = @item.product.Id })" class="btn btn-danger">Remove Product</a>
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+
+
+
+
+
+
+        <div>
+            @Html.ActionLink("Back", "Details", "Categories", new { id = Model.First().CategoriesId }, new { @class = "btn btn-primary" })
+        </div>
+    }
+    else
+    {
+        <p>No category information available.</p>
+    }
+}
+else
+{
+    <p>No products available for this category.</p>
+}
+
+
+
+
+@*
 
         <div class="row">
             <h4>Categories Products</h4>
@@ -54,17 +129,4 @@
                 </tbody>
             </table>
         </div>
-
-        <div>
-            <a asp-action="Index">Back to List</a>
-        </div>
-    }
-    else
-    {
-        <p>No category information available.</p>
-    }
-}
-else
-{
-    <p>No products available for this category.</p>
-}
+*@

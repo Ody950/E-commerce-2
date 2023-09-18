@@ -8,10 +8,10 @@ namespace E_commerce_2.Models.Interface
         Task<Categories> GetCategory(int id);
 
         Task<Categories> GetCategoryWithProducts(int id);
-        Task<Categories> Create(Categories categories);
+        Task<Categories> Create(Categories categories, IFormFile file);
         Task<Categories> UpdateCategories(int id, Categories categories);
         Task Delete(int id);
-        Task<Product> AddProductToCategories(int categoriesId, Product product);
+        Task<Product> AddProductToCategories(int categoriesId, Product product, IFormFile file);
         Task deleteProductFromCategories(int categoriesId, int productId);
     }
 }

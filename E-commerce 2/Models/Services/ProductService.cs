@@ -3,6 +3,7 @@ using Azure.Storage.Blobs.Models;
 using E_commerce_2.Data;
 using E_commerce_2.Models.Interface;
 using Microsoft.EntityFrameworkCore;
+using static IdentityServer3.Core.Events.EventConstants;
 
 namespace E_commerce_2.Models.Services
 
@@ -89,7 +90,7 @@ namespace E_commerce_2.Models.Services
             await _context.SaveChangesAsync();
             return product;
         }
-            
+
 
 
 
@@ -138,7 +139,7 @@ namespace E_commerce_2.Models.Services
 
 
 
-        public async Task DeleteProduct(int Id)
+        public async Task Delete(int Id)
         {
             Product product = await GetProduct(Id);
 
@@ -166,5 +167,25 @@ namespace E_commerce_2.Models.Services
             await _context.SaveChangesAsync();
             return product;
         }
+
+        public async Task<CategoriesProduct> AddProductToCategories(int categoryId, int productId)
+        {
+
+            CategoriesProduct categoryProduct = new CategoriesProduct()
+            {
+                ProductId = productId,
+                CategoriesId = categoryId
+            };
+
+            //_context.Entry(categoryProduct).State = EntityState.Added;
+            _context.CategoriesProducts.Add(categoryProduct);
+
+            await _context.SaveChangesAsync();
+
+            return categoryProduct;
+
+
+        }
+
     }
 }

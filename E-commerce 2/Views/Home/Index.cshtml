@@ -1,8 +1,71 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿
+@{
+    ViewData["Title"] = "Home Page"; ;
+
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<a class="mt-5 mb-5"  href="/Products/Index">
+    <img src="/Image/m3.jpg" alt="Advertisement Image" class="img-fluid custom-containerx">
+</a>
+
+
+
+
+<div class="container mt-5 mb-5 bg-light custom-container">
+    <div class="row">
+        <!-- Left side with an image -->
+        <div class="col-md-6">
+            <img src="/Image/m2.jpg" alt="Advertisement Image" class="img-fluid custom-container2">
+        </div>
+        <!-- Right side with title and details -->
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <div class="advertisement-content text-center">
+                <h2 class=" text-danger">Discover Authentic Japanese Products: Your Gateway to the Land of the Rising Sun</h2>
+                <p>Are you a fan of Japanese culture, technology, and craftsmanship? Do you crave the elegance and precision that Japan is renowned for? Look no further! Welcome to our online store, your ultimate destination for authentic Japanese products straight from the Land of the Rising Sun.</p>
+                <a class="nav-link text-white bg-danger" asp-controller="Products" asp-action="Index">Explore now</a>
+
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+@*
+   @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card border border-2 border-gray CStyle bg-light">
+                    <img src="@item.product.ImageURL" class="card-img-top product-image" alt="@item.product.Name">
+                    <div class="card-body">
+                        <h5 class="card-title text-center text-danger">@item.product.Name</h5>
+                        <p class="card-text text-center text-secondary">$@item.product.Price</p>
+                        <div class="btn-group d-flex" role="group" aria-label="Product Actions">
+                            @if (isEditor)
+                            {
+                                <a class="btn btn-danger text-white" asp-controller="Products" asp-action="Edit" asp-route-id="@item.product.Id">Edit</a>
+                            }
+                            @if (isAdministrator)
+                            {
+                                <a class="btn btn-danger text-white" asp-controller="Products" asp-action="ReplacePicture" asp-route-id="@item.product.Id">ReplacePicture</a>
+                            }
+                            <a class="btn btn-danger text-white" asp-controller="Products" asp-action="Details" asp-route-id="@item.product.Id">Details</a>
+                            @if (isAdministrator)
+                            {
+                                <a href="@Url.Action("RemoveProductFromCategory", "Categories", new { CategoryId = @item.categories.Id, ProductId = @item.product.Id })" class="btn btn-danger">Remove Product</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+*@
+

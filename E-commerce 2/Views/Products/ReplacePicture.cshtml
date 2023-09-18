@@ -4,30 +4,40 @@
     ViewData["Title"] = "ReplacePicture";
 }
 
-<h1>Edit</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center text-danger mt-4 mb-3">Replace Picture</h1>
+            <hr />
 
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="ReplacePicture" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label class="control-label">picture</label>
-                <input name="file" type="file" />
+            <form asp-action="ReplacePicture" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            </div>   
-            <div class="form-group">
-                <input type="submit" value="ReplacePicture" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="form-group mt-4 mb-4 row justify-content-center">
+                    <div class="input-group row justify-content-center">
+                        <div class="custom-file row justify-content-center">
+                            <input type="file" class="custom-file-input btn-danger row justify-content-center" id="file" name="file">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-5 mb-3 ">
+                    <div class="row justify-content-center">
+                        <div class="col-md-3">
+                            <input type="submit" value="Replace Picture" class="btn btn-danger" />
+                        </div>
+                        <div class="col-md-3">
+                            <a asp-action="Index" class="btn btn-primary">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

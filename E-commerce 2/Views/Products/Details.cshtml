@@ -2,47 +2,83 @@
 
 @{
     ViewData["Title"] = "Details";
+    var isAdministrator = User.IsInRole("Administrator");
+    var isEditor = User.IsInRole("Editor");
 }
 
-<h1>Details</h1>
+<h1 class="text-danger text-center mt-3 mb-3 ">Product Details</h1>
 
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageURL)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageURL)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Amount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Amount)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-    </dl>
+
+<div class="container mt-5 mb-5 bg-light custom-container">
+    <div class="row">
+        <!-- Left side with an image -->
+        <div class="col-md-6">
+            <img src="@Html.DisplayFor(model => model.ImageURL)" alt="Image" class="img-fluid custom-containerx">
+        </div>
+        <!-- Right side with title and details -->
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <div class="advertisement-content text-center">
+                <h3 class=" text-danger ">@Html.DisplayFor(model => model.Name)</h3>
+                <p class=" text-dark fs-6">Price: @Html.DisplayFor(model => model.Price)</p>
+                <p class=" text-dark fs-6">Amount: @Html.DisplayFor(model => model.Amount)</p>
+                <p class=" text-dark fs-6">Description: @Html.DisplayFor(model => model.Description)</p>  
+                <div>
+                    @if (isEditor || isAdministrator)
+                    {
+                        <a class="nav-link text-white bg-primary mb-3" asp-controller="Products" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                        <a class="nav-link text-white bg-primary mb-3" href="@Url.Action("DeleteView", new { id = @Model.Id })">Delete</a>
+                        <a class="nav-link text-white bg-primary mb-3" asp-controller="Products" asp-action="AddProductToCategories" asp-route-ProductId="@Model.Id">Add To Categories</a>
+                    }
+                    <a class="nav-link text-white bg-danger" asp-controller="Products" asp-action="index">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+
+
+
+
+
+
+
+
+@*
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="modal-box">
+
+                <div class="modal fade" id="myModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body row">
+                                <div class="col-sm-6 modal-image">
+                                    <img src="https://source.unsplash.com/400x450/?clothes">
+                                </div>
+                                <div class="content col-sm-6">
+                                    <h3 class="title">@Html.DisplayFor(model => model.Name)</h3>
+                                    <span class="sub-title">@Html.DisplayNameFor(model => model.Price)</span>
+                                    <span class="sub-title"> @Html.DisplayFor(model => model.Amount)</span>
+                                    <p class="description">
+                                        @Html.DisplayFor(model => model.Description)
+                                    </p>
+                                    <button class="btn">view menu</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+
+*@
+
+
