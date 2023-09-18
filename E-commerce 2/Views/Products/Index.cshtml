@@ -7,18 +7,66 @@
     var isEditor = User.IsInRole("Editor");
 }
 
+<div class="d-flex justify-content-between align-items-center">
+    <h1 class="text-center text-danger mt-5 mb-5">Products</h1>
 
-<h1>Index</h1>
-
-<p>
     @if (isAdministrator)
     {
-        <a asp-action="Create">Create New</a>
+        <a class="btn btn-danger text-center text-white mt-4 mb-4 fs-5" asp-action="Create">Create New</a>
     }
-</p>
+</div>
 
-@foreach (var item in Model)
-{
+<a class="mt-5 mb-5 " href="/Products/Index">
+    <img src="/Image/m4.jpg" alt="Advertisement Image" class="img-fluid mt-5 mb-5 ">
+</a>
+@*@foreach (var item in Model)
+{*@
+
+
+
+<div class="row  mb-5">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card border border-2 border-gray CStyle bg-light">
+                <img src="@item.ImageURL" class="card-img-top product-image" alt="@item.Name">
+                <div class="card-body">
+                    <h5 class="card-title text-center text-danger">@item.Name</h5>
+                    <p class="card-text text-center text-secondary">$@item.Price</p>
+                    <div class="btn-group d-flex" role="group" aria-label="Product Actions">
+                        @if (isEditor)
+                        {
+                            <a class="btn btn-danger text-white" href="@Url.Action("Edit", new { id = item.Id })">Edit</a>
+                        }
+                        @if (isAdministrator)
+                        {
+                            <a class="btn btn-danger text-white" href="@Url.Action("ReplacePicture", new { id = item.Id })">Replace Picture</a>
+                        }
+                        <a class="btn btn-danger text-white" href="@Url.Action("Details", new { id = item.Id })">Details</a>
+                        @if (isAdministrator)
+                        {
+                            <a class="btn btn-danger text-white" href="@Url.Action("DeleteView", new { id = item.Id })">Delete</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+
+
+
+
+
+
+
+@*
+
+
     <div class="col-md-3 product-card">
         <a asp-action="Details" asp-route-id="@item.Id" class="card-link">
             <div class="card mb-4 border border-5 border-dark CStyle">
@@ -44,5 +92,5 @@
             </div>
         </a>
     </div>
-}
+} *@
 

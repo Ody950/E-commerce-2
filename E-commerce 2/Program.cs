@@ -18,7 +18,9 @@ builder.Services
     .AddDbContext<TheMarketDBContext>
 (opions => opions.UseSqlServer(connString));
 // Add services to the container.
+
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+builder.Services.AddRazorPages();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -27,8 +29,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
 // failed trials - accessing path
 // new for cookies auth
-builder.Services.ConfigureApplicationCookie(option => 
-{ 
+builder.Services.ConfigureApplicationCookie(option =>
+{
     option.AccessDeniedPath = "/auth/index";
 });
 
@@ -62,9 +64,17 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+
+
+
+
+
+

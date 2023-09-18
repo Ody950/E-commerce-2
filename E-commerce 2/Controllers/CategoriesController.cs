@@ -75,11 +75,11 @@ namespace E_commerce_2.Controllers
         [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Logo,Description")] Categories categories)
+        public async Task<IActionResult> Create([Bind("Id,Name,Logo,Description")] Categories categories, IFormFile file)
         {
             if (ModelState.IsValid)
             {
-                await _categories.Create(categories);
+                await _categories.Create(categories, file);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -87,7 +87,7 @@ namespace E_commerce_2.Controllers
         }
 
 
-        [Authorize(Roles = "Editor")]
+        [Authorize(Roles = "Editor, Administrator")]
         // GET: Categories/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
@@ -108,7 +108,7 @@ namespace E_commerce_2.Controllers
         // POST: Categories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Editor")]
+        [Authorize(Roles = "Editor, Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([Bind("Id,Name,Logo,Description")] int Id, Categories categories)
@@ -143,6 +143,8 @@ namespace E_commerce_2.Controllers
         }
 
         // GET: Categories/Delete/5
+        [Authorize(Roles = "Administrator")]
+
         public async Task<IActionResult> Delete(int id)
         {
 
@@ -189,7 +191,7 @@ namespace E_commerce_2.Controllers
 
 
         // GET: Products/Create
-        [Authorize(Roles = "Editor")]
+        [Authorize(Roles = "Editor, Administrator")]
         public IActionResult AddProductToCategories(int CategoryId)
         {
             CategoriesProduct categoryProduct = new CategoriesProduct()
@@ -199,13 +201,13 @@ namespace E_commerce_2.Controllers
 
             return View(categoryProduct);
         }
-        [Authorize(Roles = "Editor")]
+        [Authorize(Roles = "Editor, Administrator")]
         [HttpPost]
-        public async Task<IActionResult> AddProductToCategories(CategoriesProduct categoryProduct)
+        public async Task<IActionResult> AddProductToCategories(CategoriesProduct categoryProduct, IFormFile file)
         {
             if (ModelState.IsValid)
             {
-                await _categories.AddProductToCategories(categoryProduct.CategoriesId, categoryProduct.product);
+                await _categories.AddProductToCategories( categoryProduct.CategoriesId, categoryProduct.product, file);
                 TempData["AlertMessage"] = "A new product Added to a Category successfully :)";
                 return RedirectToAction("Details", "Categories", new { id = categoryProduct.CategoriesId });
             }

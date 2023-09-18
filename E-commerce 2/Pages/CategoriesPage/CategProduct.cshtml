@@ -1,0 +1,40 @@
+﻿@page
+@model E_commerce_2.Pages.CategoriesPage.CategProductModel
+@{
+    ViewBag.titel = "All Categories";
+}
+
+<h1>All Categories</h1>
+
+<h1>Name : @Model.categories.Name </h1>
+<br />
+<img src="@Model.categories.Logo" width=100 />
+<br />
+<h1>Details : @Model.categories.Description </h1>
+<br />
+
+
+@if (Model.categories.categoriesProducts != null && Model.categories.categoriesProducts.Any())
+{
+    @foreach (var item in Model.categories.categoriesProducts)
+    {
+        <img src="@item.product.ImageURL" width=100 />
+
+        <br />
+        <h3>Name : @item.product.Name</h3>
+        <h3> Description : @item.product.Description</h3>
+        <h3> Price : @item.product.Price</h3>
+        <br />
+        <h3> Amount : @item.product.Amount</h3>
+        <br />
+        <hr style="height:2px;width:400px;border-width:1px;">
+
+    }
+}
+else
+{
+    <p>No products available for this category.</p>
+}
+
+<hr />
+

@@ -1,63 +1,68 @@
 ﻿@model E_commerce_2.Models.CategoriesProduct
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<a class="btn btn-primary btn-lg " asp-controller ="Categories" asp-action = "Index" >  Back </a>
 
-
-<section class="vh-100" style="background-color: #eee;" >
-  <div class="container h-100">
-    <div class="row d-flex justify-content-center">
-      <div class="col-md-6">
-        <div class="card text-black" style="border-radius: 25px;">
-          <div class="card-body p-md-5">
-            <div class="row justify-content-center">
-              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
-<form asp-controller="Categories" asp-action="AddProductToCategories" method="post" enctype="multipart/form-data" align="center">
-                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div>
+    @Html.ActionLink("Back", "Details", "Categories", new { id = Model.CategoriesId }, new { @class = "btn btn-danger mb-4" })
+</div>
+<section class="vh-100 ">
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-md-6">
+                <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5 text-center bg-secondary">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                                <form asp-controller="Categories" asp-action="AddProductToCategories" method="post" enctype="multipart/form-data" align="center">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input hidden asp-for="CategoriesId" />
                                     <div class="form-group">
-                                        <input hidden asp-for="CategoriesId" />
-                                    </div>
-                                        <div class="form-group">
                                         <label asp-for="@Model.product.Name" class="control-label"></label>
                                         <input asp-for="@Model.product.Name" class="form-control" />
                                         <span asp-validation-for="@Model.product.Name" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group mt-2 mb-2">
+                                        <label for="file" class="control-label">Upload Image</label>
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input btn-danger" id="file" name="file">
+                                            </div>
                                         </div>
-                                        <div class="form-group">
+                                    </div>
+
+                                    <div class="form-group" style="display: none;">
                                         <label asp-for="@Model.product.ImageURL" class="control-label"></label>
-                                        <input asp-for="@Model.product.ImageURL" class="form-control" />
+                                        <input asp-for="@Model.product.ImageURL" class="form-control" value="1" />
                                         <span asp-validation-for="@Model.product.ImageURL" class="text-danger"></span>
-                                        </div>
-                                        <div class="form-group">
+                                    </div>
+
+                                    <div class="form-group">
                                         <label asp-for="@Model.product.Price" class="control-label"></label>
                                         <input asp-for="@Model.product.Price" class="form-control" />
                                         <span asp-validation-for="@Model.product.Price" class="text-danger"></span>
-                                        </div>
-                                        <div class="form-group">
+                                    </div>
+                                    <div class="form-group">
                                         <label asp-for="@Model.product.Amount" class="control-label"></label>
                                         <input asp-for="@Model.product.Amount" class="form-control" />
                                         <span asp-validation-for="@Model.product.Amount" class="text-danger"></span>
-                                        </div>
-                                        <div class="form-group">
+                                    </div>
+                                    <div class="form-group">
                                         <label asp-for="@Model.product.Description" class="control-label"></label>
                                         <input asp-for="@Model.product.Description" class="form-control" />
                                         <span asp-validation-for="@Model.product.Description" class="text-danger"></span>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="submit" value="Create" class="btn btn-primary" />
-                                        </div>
-                                    </form>
-   </div>
-           
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="Create" class="btn btn-primary mt-5" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </section>
 
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 

@@ -1,4 +1,6 @@
-﻿using E_commerce_2.Data;
+﻿using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs;
+using E_commerce_2.Data;
 using E_commerce_2.Models.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -9,14 +11,15 @@ namespace E_commerce_2.Models.Services
 {
     public class CategoriesServices : ICategories
     {
-
         private TheMarketDBContext _context;
+        private readonly IConfiguration _Configuration;
 
-        public CategoriesServices(TheMarketDBContext context)
+
+        public CategoriesServices(TheMarketDBContext context, IConfiguration config)
         {
             _context = context;
+            _Configuration = config;
         }
-
 
 
         public async Task<List<CategoriesProduct>> GetAllProductsForCategory(int categoryId)
@@ -29,28 +32,55 @@ namespace E_commerce_2.Models.Services
             return productsForCategory;
         }
 
-        
 
 
-        public async Task<Product> AddProductToCategories(int categoriesId, Product product)
+        public async Task<Product> AddProductToCategories(int categoriesId, Product product, IFormFile file)
         {
-
-            _context.Entry(product).State = EntityState.Added;
-            await _context.SaveChangesAsync();
-
-            CategoriesProduct categoryProduct = new CategoriesProduct()
+            try
             {
-                ProductId = product.Id,
-                CategoriesId = categoriesId
-            };
+                BlobContainerClient container = new BlobContainerClient(_Configuration.GetConnectionString("StorageAccount"), "images");
+                await container.CreateIfNotExistsAsync();
 
-            _context.Entry(categoryProduct).State = EntityState.Added;
+                BlobClient blob = container.GetBlobClient(file.FileName);
+                using var stream = file.OpenReadStream();
 
-            await _context.SaveChangesAsync();
+                BlobUploadOptions options = new BlobUploadOptions()
+                {
+                    HttpHeaders = new BlobHttpHeaders() { ContentType = file.ContentType }
+                };
 
-            return product;
+                if (!await blob.ExistsAsync())
+                {
+                    await blob.UploadAsync(stream, options);
+                }
+
+                product.ImageURL = blob.Uri;
+
+                _context.Products.Add(product);
+                await _context.SaveChangesAsync();
+
+                CategoriesProduct categoryProduct = new CategoriesProduct()
+                {
+                    ProductId = product.Id,
+                    CategoriesId = categoriesId
+                };
+
+                _context.Entry(categoryProduct).State = EntityState.Added;
+
+                await _context.SaveChangesAsync();
+
+                return product;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+           
 
         }
+
+
 
         public async Task deleteProductFromCategories(int categoriesId, int productId)
         {
@@ -83,6 +113,7 @@ namespace E_commerce_2.Models.Services
 
 
 
+
         public async Task<Categories> GetCategoryWithProducts(int categoryId)
         {
             return await _context.Categories
@@ -92,8 +123,26 @@ namespace E_commerce_2.Models.Services
         }
 
 
-        public async Task<Categories> Create(Categories categories)
+        public async Task<Categories> Create(Categories categories, IFormFile file)
         {
+            BlobContainerClient container = new BlobContainerClient(_Configuration.GetConnectionString("StorageAccount"), "images");
+            await container.CreateIfNotExistsAsync();
+
+            BlobClient blob = container.GetBlobClient(file.FileName);
+            using var stream = file.OpenReadStream();
+
+            BlobUploadOptions options = new BlobUploadOptions()
+            {
+                HttpHeaders = new BlobHttpHeaders() { ContentType = file.ContentType }
+            };
+
+            if (!await blob.ExistsAsync())
+            {
+                await blob.UploadAsync(stream, options);
+            }
+
+            categories.Logo = blob.Uri;
+            
              _context.Entry(categories).State = EntityState.Added;
             await _context.SaveChangesAsync();
             return categories;

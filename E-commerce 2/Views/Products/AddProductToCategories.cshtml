@@ -1,0 +1,35 @@
+﻿@model E_commerce_2.Models.CategoriesProduct
+
+@{
+    ViewData["Title"] = "AddProductToCategories";
+}
+
+
+<div class="container mt-5 glass-effect">
+    <h1 class="text-center">Add Product To Categories</h1>
+    <hr />
+
+    <form asp-action="AddProductToCategories" method="post" enctype="multipart/form-data" class="glass-effect p-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <input hidden asp-for="ProductId" />
+        </div>
+
+        
+            <div class="form-group">
+                <label for="CategoriesId">Categories</label>
+              <select asp-for="CategoriesId" class="form-control" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))">
+                    <option value="">Select a category</option>
+                </select>
+            </div>
+
+        <div class="form-group mt-5">
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Create</button>
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+
+    </form>
+</div>

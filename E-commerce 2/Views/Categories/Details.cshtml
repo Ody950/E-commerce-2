@@ -3,81 +3,83 @@
 
 @{
     ViewData["Title"] = "Details";
+    var isAdministrator = User.IsInRole("Administrator");
+    var isEditor = User.IsInRole("Editor");
 }
+<h1 class ="text-danger text-center">Categories Details</h1>
 
-<h1>Details</h1>
 
-<div>
-    <h4>Categories</h4>
+<div class="container mt-3 mb-3 ">
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Logo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Logo)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dd class="col-sm-10">
-            <a asp-controller="Categories" asp-action="AddProductToCategories" asp-route-CategoryId="@Model.Id">AddProduct</a>
+    <div class="row">
+        
+        <div class="col-md-9 mt-3 mb-3">
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+                <dd class="col-sm-10">
+                    @{
+                        var description = Model.Description;
+                        var maxLength = 50;
+                        var lines = new List<string>();
+
+                        while (description.Length > maxLength)
+                        {
+                            lines.Add(description.Substring(0, maxLength));
+                            description = description.Substring(maxLength);
+                        }
+
+                        if (!string.IsNullOrEmpty(description))
+                        {
+                            lines.Add(description);
+                        }
+                    }
+
+                    @foreach (var line in lines)
+                    {
+                        <p>@line</p>
+                    }
+                </dd>
+                <dd class="col-sm-2">
+                    <div class="btn-group mt-3 mb-3" role="group" aria-label="Actions">
+                        @if (isAdministrator || isEditor)
+                        {
+                            <a class="btn btn-primary" asp-controller="Categories" asp-action="AddProductToCategories" asp-route-CategoryId="@Model.Id">Add Product</a>
+                            <a class="btn btn-danger text-white" asp-controller="Categories" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+
+                        }
+                        <a class="btn btn-danger text-white" asp-controller="Categories" asp-action="Index" asp-route-id="@Model.Id">Back to List</a>
+
+                    </div>
+                </dd>
 
 
-        </dd>
 
-    </dl>
+            </dl>
+        </div>
+        <div class="col-md-3 mt-3 mb-3 custom-logo">
+            <div class="d-flex align-items-center">
+                <h5 class="fw-bold ml-2">Logo:</h5>
+                <img src="@Model.Logo" alt="Logo Image" class="custom-logo" />
+                
+            </div>
+        </div>
+
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+
+
+<div mt-3 mb-3>
+    @Html.Partial("_GetAllProductsForCategory", Model.categoriesProducts)
 </div>
 
-<div>
-    @Html.Partial("_GetAllProductsForCategory", Model.categoriesProducts);
-</div>
 
-
-
-@*<div>
-    <h4>Categories Products</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Product ImageURL</th>
-                <th>Product Price</th>
-                <th>Product Amount</th>
-                <th>Product Description</th>
-                <th>Remove From Category</th>
-            </tr>
-        </thead>
-        <tbody>
-
-            
-            @foreach (var product in Model.categoriesProducts.OrderBy(p => p.product.Name))
-            {
-                <tr>
-                    <td>@(product.product != null ? product.product.Name : "N/A")</td>
-                    <td>@(product.product != null ? product.product.ImageURL : "N/A")</td>
-                    <td>@(product.product != null ? product.product.Price : "N/A")</td>
-                    <td>@(product.product != null ? product.product.Amount : "N/A")</td>
-                    <td>@(product.product != null ? product.product.Description : "N/A")</td>
-                    <td>
-                        <a asp-controller="Categories" asp-action="RemoveProductFromCategory" asp-route-CategoryId="@Model.Id" asp-route-productId="@product.product.Id">Remove</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>*@
 

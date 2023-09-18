@@ -1,0 +1,22 @@
+﻿@page
+@model E_commerce_2.Pages.CategoriesPage.IndexModel
+@{
+    ViewBag.titel = "Categories";
+}
+
+
+<h1>The Categories</h1>
+
+
+@foreach (var item in Model.categories)
+{
+    <h1>Name : @item.Name </h1>
+    <br />
+    <img src="@item.Logo" width=100 />
+    <br />
+    <h1>Details : @item.Description </h1>
+    <br />
+    <a asp-page="/CategoriesPage/CategProduct" asp-route-id=@item.Id>Products</a>
+
+    <hr />
+}

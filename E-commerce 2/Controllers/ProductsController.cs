@@ -12,6 +12,7 @@ using E_commerce_2.Models.Interface;
 using Microsoft.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using static IdentityServer3.Core.Events.EventConstants;
 
 namespace E_commerce_2.Controllers
 {
@@ -19,14 +20,18 @@ namespace E_commerce_2.Controllers
     {
 
         private readonly IProduct _product;
+        private TheMarketDBContext _context;
 
-        public ProductsController(IProduct product)
+        public ProductsController(IProduct product, TheMarketDBContext context)
         {
             _product = product;
+            _context = context;
         }
 
+
+
         //GET: Products
-        
+
         public async Task<IActionResult> Index()
         {
             if(await _product.GetProducts() == null)
@@ -70,20 +75,22 @@ namespace E_commerce_2.Controllers
         public async Task<IActionResult> Create([Bind("Id,Name,ImageURL,Price,Amount,Description")] Product product, IFormFile file)
         {
 
+
+            if (ModelState.IsValid)
+            {
                 await _product.CreateProduct(product, file);
                 return RedirectToAction(nameof(Index));
-           
+            }
+            else
+            {
+                return View(product);
+            }
         }
 
 
 
-
-
-
-
-
         //GET: Products/ReplacePicture/5
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Editor")]
         public async Task<IActionResult> ReplacePicture(int id)
         {
             if (id == null || _product.GetProducts == null)
@@ -104,7 +111,7 @@ namespace E_commerce_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Editor")]
+        [Authorize(Roles = "Administrator, Editor")]
 
         public async Task<IActionResult> ReplacePicture(int Id, IFormFile file)
         {
@@ -136,24 +143,8 @@ namespace E_commerce_2.Controllers
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         //GET: Products/Edit/5
-        [Authorize(Roles = "Editor")]
+        [Authorize(Roles = "Administrator, Editor")]
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -175,7 +166,7 @@ namespace E_commerce_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Editor")]
+        [Authorize(Roles = "Administrator, Editor")]
 
         public async Task<IActionResult> Edit([Bind("Id,Name,ImageURL,Price,Amount,Description")] int Id, Product product)
         {
@@ -209,8 +200,80 @@ namespace E_commerce_2.Controllers
         }
 
 
-        // GET: Products/Delete/5
-        public async Task<IActionResult> Delete(int id)
+
+
+
+        //// GET: Products/Create
+        //[Authorize(Roles = "Editor, Administrator")]
+        //public IActionResult AddProductToCategories(int ProductId, int CategoryId)
+        //{
+        //    CategoriesProduct categoryProduct = new CategoriesProduct()
+        //    {
+        //        CategoriesId = CategoryId,
+        //        ProductId = ProductId
+        //    };
+
+        //    return View(categoryProduct);
+        //}
+
+        [HttpGet]
+        [Authorize(Roles = "Editor, Administrator")]
+        public IActionResult AddProductToCategories(int ProductId)
+        {
+            CategoriesProduct categoryProduct = new CategoriesProduct()
+            {
+                ProductId = ProductId
+            };
+            ViewBag.Categories = _context.Categories.ToList();
+            return View(categoryProduct);
+
+        }
+
+        [Authorize(Roles = "Editor, Administrator")]
+        [HttpPost]
+        public async Task<IActionResult> AddProductToCategories(CategoriesProduct categoryProduct)
+        {
+            if (ModelState.IsValid)
+            {
+                await _product.AddProductToCategories(categoryProduct.CategoriesId, categoryProduct.ProductId);
+                TempData["AlertMessage"] = "A new product Added to a Category successfully :)";
+                return RedirectToAction("Details", "Categories", new { id = categoryProduct.CategoriesId });
+            }
+            else
+            {
+                return View(categoryProduct);
+            }
+        }
+
+
+
+        //[Authorize(Roles = "Editor, Administrator")]
+        //[HttpPost]
+        //public async Task<IActionResult> AddProductToCategories(CategoriesProduct categoryProduct)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        await _product.AddProductToCategories(categoryProduct.CategoriesId, categoryProduct.ProductId);
+
+
+        //        return RedirectToAction("Details", "Categories", new { id = categoryProduct.CategoriesId });
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("ViewAllProducts", "Products");
+        //    }
+
+        //}
+
+
+
+
+
+
+
+        // GET: Products/DeleteView/5
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> DeleteView(int id)
         {
             if (id == null || _product.GetProducts == null)
             {
@@ -229,9 +292,7 @@ namespace E_commerce_2.Controllers
 
         // POST: Products/Delete/5
         [Authorize(Roles = "Administrator")]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (_product.GetProducts == null)
             {
@@ -240,7 +301,7 @@ namespace E_commerce_2.Controllers
             var product = await _product.GetProduct(id);
             if (product != null)
             {
-                await _product.DeleteProduct(id);
+                await _product.Delete(id);
             }
 
             return RedirectToAction(nameof(Index));
@@ -251,4 +312,7 @@ namespace E_commerce_2.Controllers
         //    return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
         //}
     }
+
+
+
 }
