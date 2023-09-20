@@ -5,8 +5,10 @@ using E_commerce_2.Data;
 using E_commerce_2.Models.Interface;
 using E_commerce_2.Models.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Exchange.WebServices.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +45,7 @@ builder.Services.AddTransient<IUser, UserServices>();
 builder.Services.AddTransient<ICategories, CategoriesServices>();
 builder.Services.AddTransient<IProduct, ProductService>();
 builder.Services.AddTransient<ICategoriesProduct, CategoriesProductService>();
-
+builder.Services.AddTransient<ICart, CartServices>();
 
 var app = builder.Build();
 

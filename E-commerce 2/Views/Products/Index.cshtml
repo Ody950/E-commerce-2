@@ -42,7 +42,8 @@
                         {
                             <a class="btn btn-danger text-white" href="@Url.Action("ReplacePicture", new { id = item.Id })">Replace Picture</a>
                         }
-                        <a class="btn btn-danger text-white" href="@Url.Action("Details", new { id = item.Id })">Details</a>
+                        <a class="btn btn-danger text-white" asp-page="/TheCart/Product" asp-route-id="@item.Id">Details</a>
+
                         @if (isAdministrator)
                         {
                             <a class="btn btn-danger text-white" href="@Url.Action("DeleteView", new { id = item.Id })">Delete</a>

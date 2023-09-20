@@ -2,21 +2,65 @@
 @model E_commerce_2.Pages.CategoriesPage.IndexModel
 @{
     ViewBag.titel = "Categories";
+    Layout = "_Layout";
+    var isAdministrator = User.IsInRole("Administrator");
+    var isEditor = User.IsInRole("Editor");
+
 }
+
 
 
 <h1>The Categories</h1>
 
-
-@foreach (var item in Model.categories)
-{
-    <h1>Name : @item.Name </h1>
-    <br />
-    <img src="@item.Logo" width=100 />
-    <br />
-    <h1>Details : @item.Description </h1>
-    <br />
-    <a asp-page="/CategoriesPage/CategProduct" asp-route-id=@item.Id>Products</a>
-
-    <hr />
-}
+<p>
+    <a class="btn bg-primary text-white" asp-controller="Categories"  asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Logo</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.categories)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <img src="@Html.DisplayFor(modelItem => item.Logo)" alt="Logo Image" class="custom-logo2" />
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Description) && item.Description.Length > 50)
+                    {
+                        <text>@item.Description.Substring(0, 50)</text>
+                        <span>...</span>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.Description)
+                    }
+                </td>
+                <td>
+                    @if (isEditor || isAdministrator)
+                    {
+                        <a class="btn btn-danger text-white" asp-controller="Categories" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                    <a class="btn btn-danger text-white" asp-controller="Categories" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    @if (isAdministrator)
+                    {
+                        <a class="btn btn-danger text-white" asp-controller="Categories" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                    @if (isEditor || isAdministrator)
+                    {
+                        <a class="btn btn-danger text-white" asp-controller="Categories" asp-action="AddProductToCategories" asp-route-CategoryId="@item.Id">AddProduct</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
