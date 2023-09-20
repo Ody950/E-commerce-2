@@ -22,17 +22,17 @@ namespace E_commerce_2.Controllers
         }
 
         // GET: Carts
-        public async Task<IActionResult> Index()
-        {
-            return View(await _cart.GetCarts());
-        }
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _cart.GetCarts());
+        //}
 
         // GET: Carts/Details/5
-        public async Task<IActionResult> Details(int id)
-        {
-            var cart = await _cart.GetCart(id);
-            return View(cart);
-        }
+        //public async Task<IActionResult> Details(int id)
+        //{
+        //    var cart = await _cart.GetCart(id);
+        //    return View(cart);
+        //}
 
         // GET: Carts/Create
         public IActionResult Create()
@@ -53,21 +53,21 @@ namespace E_commerce_2.Controllers
             return View(newCart);
         }
 
-        // GET: Carts/Edit/5
-        public async Task<IActionResult> Edit(int id, CartDTO upDateCartDTO)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Carts/Edit/5
+        //public async Task<IActionResult> Edit(int id, CartDTO upDateCartDTO)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var cart = await _cart.UpdateCart(id, upDateCartDTO);
-            if (cart == null)
-            {
-                return NotFound();
-            }
-            return View(cart);
-        }
+        //    var cart = await _cart.UpdateCart(id, upDateCartDTO);
+        //    if (cart == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(cart);
+        //}
 
 
 

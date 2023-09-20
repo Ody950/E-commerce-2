@@ -36,7 +36,7 @@
                         @if (User.IsInRole("Administrator"))
                         {
                             <li class="nav-item ">
-                                <a class="nav-link text-white bg-dark mt-2" asp-controller="Categories" asp-action="Index">Catetgories Details</a>
+                                <a class="nav-link text-white bg-dark mt-2" asp-page="/CategoriesPage/Index">Catetgories Details</a>
                             </li>
                         }
                         <li class="nav-item ">
@@ -50,6 +50,13 @@
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <li class="nav-item ">
+                                @await Component.InvokeAsync("Cart")
+                            </li>
+                            <li class="nav-item order-4 ">
+                                <a class="nav-link text-white bg-dark mt-2" href="/TheCart/Index">Cart</a>
+                            </li>
+                            
                             <li class="nav-item order-4 ">
                                 <a class="nav-link text-white bg-dark mt-2" asp-controller="Auth" asp-action="Logout">Logout</a>
                             </li>

@@ -3,6 +3,7 @@ using E_commerce_2.Models.DTO;
 using E_commerce_2.Models.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
+using System.Web.Helpers;
 
 namespace E_commerce_2.Models.Services
 {
@@ -33,24 +34,21 @@ namespace E_commerce_2.Models.Services
             return product;
         }
 
-        public async Task<CartDTO> Create(CartDTO newCartDTO)
+        public async Task<Cart> Create(Cart cart)
         {
-
-            Cart newCart = new Cart()
-            {
-
-                Id = newCartDTO.Id,
-                UserId = newCartDTO.UserId,
-                TotalPrice = newCartDTO.TotalPrice,
-                Count = newCartDTO.Count,
-
-            };
-            _context.Entry(newCart).State = EntityState.Added;
+            _context.Entry(cart).State = EntityState.Added;
             await _context.SaveChangesAsync();
-            return newCartDTO;
+
+            return cart;
         }
 
-     
+        public async Task<CartProduct> CreateCartProduct(CartProduct cartProduct) 
+        {
+            _context.Entry(cartProduct).State = EntityState.Added;
+            await _context.SaveChangesAsync();
+
+            return cartProduct;
+        }
 
         public async Task Delete(int id)
         {
@@ -78,23 +76,54 @@ namespace E_commerce_2.Models.Services
             }
         }
 
-        public async Task<CartDTO> GetCart(int id)
+        public async Task<Cart> GetCart(string userId) 
         {
-            var cart = await _context.Carts.FirstOrDefaultAsync(d => d.Id == id);
+            var cart = await _context.Carts.FirstOrDefaultAsync(cart => cart.UserId == userId);
             if (cart == null)
             {
-                throw new InvalidOperationException($"Cart with ID {id} not found.");
+                throw new InvalidOperationException($"Cart with UserId {userId} not found.");
             }
-            var cartDTO = await _context.Carts.Select(x => new CartDTO
-            {
-                Id = x.Id,
-                UserId = x.UserId,
-                TotalPrice = x.TotalPrice,
-                Count = x.Count,
-            }).FirstOrDefaultAsync(x => x.Id == id);
-
-            return cartDTO;
+            
+            return cart;
         }
+
+        public async Task<IEnumerable<CartProduct>> GetCartProductByUserId(string userId) 
+        {
+            Cart cart = await GetCart(userId);
+            return _context.CartsProducts.Where(cartItem => cartItem.CartId == cart.Id).Include(x => x.product);
+        }
+
+
+
+
+        public async Task<CartProduct> GetCartProductByProductIdForUser(string userId, int productId) 
+        {
+            var cartProduct = await GetCartProductByUserId(userId);
+            return cartProduct.FirstOrDefault(cart => cart.ProductId == productId);
+        }
+
+
+        public async Task<CartProduct> UpdateCartProduct(CartProduct cartProduct)
+        {
+            var updateCartProduct = new CartProduct
+            {
+                CartId = cartProduct.CartId,
+                ProductId = cartProduct.ProductId,
+                Quantity = cartProduct.Quantity
+            };
+            _context.Entry(cartProduct).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return updateCartProduct;
+
+        }
+
+        public async Task RemoveCartProduct(string userId, int productId) 
+        {
+            CartProduct cartItem = await GetCartProductByProductIdForUser(userId, productId);
+            _context.CartsProducts.Remove(cartItem);
+            await _context.SaveChangesAsync();
+        }
+
 
         public async Task<List<CartDTO>> GetCarts()
         {
@@ -111,24 +140,5 @@ namespace E_commerce_2.Models.Services
             return carts;
         }
 
-        public async Task<CartDTO> UpdateCart(int id, CartDTO upDateCartDTO)
-        {
-            var theCart = await _context.Carts.FirstOrDefaultAsync(d => d.Id == id);
-            if (theCart == null)
-            {
-                throw new InvalidOperationException($"Cart with ID {id} not found.");
-            }
-            Cart updateCart = new Cart
-            {
-                Id = upDateCartDTO.Id,
-                UserId = upDateCartDTO.UserId,
-                TotalPrice = upDateCartDTO.TotalPrice,
-                Count = upDateCartDTO.Count,
-            };
-            _context.Entry(updateCart).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return upDateCartDTO;
-        }
     }
 }

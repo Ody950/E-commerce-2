@@ -1,11 +1,12 @@
-﻿@model E_commerce_2.Models.Product
+﻿@using Microsoft.AspNetCore.Identity;
+@model E_commerce_2.Models.Product
 
 @{
     ViewData["Title"] = "Details";
     var isAdministrator = User.IsInRole("Administrator");
     var isEditor = User.IsInRole("Editor");
+    var isUser = User.IsInRole("User");
 }
-
 <h1 class="text-danger text-center mt-3 mb-3 ">Product Details</h1>
 
 
@@ -23,6 +24,8 @@
                 <p class=" text-dark fs-6">Amount: @Html.DisplayFor(model => model.Amount)</p>
                 <p class=" text-dark fs-6">Description: @Html.DisplayFor(model => model.Description)</p>  
                 <div>
+
+                   
                     @if (isEditor || isAdministrator)
                     {
                         <a class="nav-link text-white bg-primary mb-3" asp-controller="Products" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>

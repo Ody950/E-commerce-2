@@ -1,0 +1,47 @@
+﻿@page
+@model E_commerce_2.Pages.TheCart.CartModel
+@{
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+              
+<div class="container" style="padding-top:65px">
+    <h1 class="text-left" style="padding-bottom:15px">Shopping Cart</h1>
+    @if (Model.CartProducts == null)
+    {
+        <p>There is no products...</p>
+    }else{
+
+    @foreach (var item in Model.CartProducts)
+    {
+        <div class="row">
+            <hr/>
+            <div class="col-md-3">
+                    <a href="/Cart/Product/@item.product.Id">
+                        <img src="@Html.DisplayFor(modelItem => item.product.ImageURL)" width="250" height="250" />
+                </a>
+            </div>
+            <div class="col-md-9">
+                <form class="form-row" method="post">
+                    <div class="form-group col-md-8">
+                        <h1 >@item.product.Name</h1>
+                        <div style="margin-top:40px">
+                        <label asp-for="@item.Quantity" style="font-size:20px">Quantity  </label>
+                        <input asp-for="@item.Quantity" type="number" name="Quantity" style="font-size:20px">
+                                <p style="display: contents;font-size:20px">@(item.product.Price * item.Quantity) JD</p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4" style="margin-top: 70px">
+                        <button type="submit" class="btn btn-outline-primary" asp-page-handler="update" asp-route-id="@item.ProductId">Update</button>
+                        <button type="submit" class="btn btn-outline-danger" asp-page-handler="delete" asp-route-id="@item.ProductId">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }}
+    <div class="text-right">
+        <a asp-controller="Product" asp-action="Index" class="btn btn-outline-success" >Go Back to Shopping</a>
+    </div>
+    <div class="text-right">
+        <a href="/Checkout" class="btn btn-outline-success" role="button">Check Out</a>
+    </div>
+</div>
