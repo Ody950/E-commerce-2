@@ -13,90 +13,55 @@ namespace E_commerce_2.Models.Services
         {
             _context = context;
         }
-        public async Task<Product> AddProductToOrder(int OrderId, Product product)
+        public async Task<Order> CreateOrder(Order order)
         {
-            _context.Entry(product).State = EntityState.Added;
-
+            _context.Entry(order).State = EntityState.Added;
             await _context.SaveChangesAsync();
 
-            OrderProduct orderProduct = new OrderProduct()
+            return order;
+        }
+        public async Task<OrderProduct> CreateOrderProduct(OrderProduct orderItem)
+        {
+            _context.Entry(orderItem).State = EntityState.Added;
+            await _context.SaveChangesAsync();
+
+            return orderItem;
+        }
+
+        public async Task<Order> GetLatestOrderForUser(string userId)
+        {
+            var orders = await GetOrdersByUserId(userId);
+            return orders.OrderByDescending(order => order.Id).FirstOrDefault();
+        }
+
+        public async Task<IEnumerable<Order>> GetOrdersByUserId(string userId)
+        {
+            return await _context.Orders.Where(order => order.UserID == userId).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Order>> GetOrders()
+        {
+            return await _context.Orders.ToListAsync();
+        }
+        public async Task<IList<OrderProduct>> GetOrderProductsByOrderId(int orderId)
+        {
+            return await _context.OrdersProducts.Where(orderItems => orderItems.OrderID == orderId).Include(x => x.Product).ToListAsync();
+        }
+
+        public async Task<IEnumerable<OrderProduct>> GetOrderProducts()
+        {
+            return await _context.OrdersProducts.Include(x => x.Product).ToListAsync();
+        }
+        public async Task<OrderProduct> UpdateOrderProducts(OrderProduct orderItem)
+        {
+            var updateOrderItem = new OrderProduct
             {
-                ProductId = product.Id,
-                OrderId = OrderId
+                OrderID = orderItem.ID,
+                ProductID = orderItem.ProductID,
             };
-
-            _context.Entry(orderProduct).State = EntityState.Added;
-
+            _context.Entry(orderItem).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return product;
-        }
-
-        public async Task<OrderDTO> Create(OrderDTO orderDTO)
-        {
-            Order newOrder = new Order()
-            {
-
-                Id = orderDTO.Id,
-                UserId = orderDTO.UserId,
-                TotalPrice = orderDTO.TotalPrice,
-                FirstName = orderDTO.FirstName,
-                LastName = orderDTO.LastName,
-                Address = orderDTO.Address,
-                City = orderDTO.City,
-                Stat = orderDTO.Stat,
-                Zip = orderDTO.Zip,
-                Timestamp = orderDTO.Timestamp,
-
-            };
-            _context.Entry(newOrder).State = EntityState.Added;
-            await _context.SaveChangesAsync();
-            return orderDTO;
-        }
-
-        public async Task Delete(int id)
-        {
-            Order existingDoc = await _context.Orders.FindAsync(id);
-            if (existingDoc != null)
-            {
-                _context.Entry(existingDoc).State = EntityState.Deleted;
-                await _context.SaveChangesAsync();
-            }
-
-            else
-            {
-                throw new InvalidOperationException("The Order Id is not exist.");
-            }
-        }
-
-        public async Task deleteProductFromOrder(int OrderId, int productId)
-        {
-            Product productOrder = await _context.Products.FirstOrDefaultAsync(x => x.Id == productId);
-            if (productOrder != null)
-            {
-                _context.Entry(productOrder).State = EntityState.Deleted;
-
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        public async Task<Order> GetOrder(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<OrderDTO>> GetOrderByUserID(string UserId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<OrderDTO>> GetOrders()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<OrderDTO> UpdateOrder(int id, OrderDTO order)
-        {
-            throw new NotImplementedException();
+            return updateOrderItem;
         }
     }
 }

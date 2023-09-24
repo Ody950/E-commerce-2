@@ -45,7 +45,6 @@ namespace E_commerce_2.Pages.Auth
 
         }
 
-
         public void OnGet()
         {
         }

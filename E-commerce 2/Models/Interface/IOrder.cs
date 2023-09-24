@@ -4,17 +4,19 @@ namespace E_commerce_2.Models.Interface
 {
     public interface IOrder
     {
-        Task<List<OrderDTO>> GetOrders();
-        Task<Order> GetOrder(int id);
-        
-        Task<OrderDTO> Create(OrderDTO orderDTO);
-       
-        Task<OrderDTO> UpdateOrder(int id, OrderDTO order);
-      
-        Task Delete(int id);
 
-        public Task<List<OrderDTO>> GetOrderByUserID(string UserId);
-        Task<Product> AddProductToOrder(int OrderId, Product product);
-        Task deleteProductFromOrder(int OrderId, int productId);
+        Task<Order> CreateOrder(Order order);
+        Task<OrderProduct> CreateOrderProduct(OrderProduct orderProducts);
+        Task<Order> GetLatestOrderForUser(string userId);
+        Task<IEnumerable<Order>> GetOrdersByUserId(string userId);
+        Task<IEnumerable<Order>> GetOrders();
+        Task<IList<OrderProduct>> GetOrderProductsByOrderId(int orderId);
+        Task<IEnumerable<OrderProduct>> GetOrderProducts();
+        Task<OrderProduct> UpdateOrderProducts(OrderProduct orderProducts);
+
+
+
+
+
     }
 }

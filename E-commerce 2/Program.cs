@@ -4,13 +4,23 @@ using E_commerce_2.Auth.Models.Services;
 using E_commerce_2.Data;
 using E_commerce_2.Models.Interface;
 using E_commerce_2.Models.Services;
+using IdentityServer3.Core.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Exchange.WebServices.Data;
 
-var builder = WebApplication.CreateBuilder(args);
+
+
+namespace E_commerce_2
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+
+            var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
@@ -24,14 +34,17 @@ builder.Services
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 builder.Services.AddRazorPages();
 
+
+
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.User.RequireUniqueEmail = true;
 }).AddEntityFrameworkStores<TheMarketDBContext>();
 
-// failed trials - accessing path
-// new for cookies auth
-builder.Services.ConfigureApplicationCookie(option =>
+
+            // failed trials - accessing path
+            // new for cookies auth
+            builder.Services.ConfigureApplicationCookie(option =>
 {
     option.AccessDeniedPath = "/auth/index";
 });
@@ -46,8 +59,12 @@ builder.Services.AddTransient<ICategories, CategoriesServices>();
 builder.Services.AddTransient<IProduct, ProductService>();
 builder.Services.AddTransient<ICategoriesProduct, CategoriesProductService>();
 builder.Services.AddTransient<ICart, CartServices>();
+builder.Services.AddTransient<IOrder, OrderServices>();
+builder.Services.AddTransient<IEmail, EmailServices>();
+builder.Services.AddTransient<IUser, UserServices>();
 
-var app = builder.Build();
+
+            var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
@@ -75,7 +92,9 @@ app.MapControllerRoute(
 app.Run();
 
 
-
+        }
+    }
+}
 
 
 

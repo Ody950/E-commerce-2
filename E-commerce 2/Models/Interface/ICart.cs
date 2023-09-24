@@ -17,5 +17,7 @@ namespace E_commerce_2.Models.Interface
         Task<Product> AddProductToCart(int CartId, Product product);
 
         Task RemoveCartProduct(string userId, int productId);
+        Task RemoveCartProducts(IEnumerable<CartProduct> cartProduct);
+
     }
 }

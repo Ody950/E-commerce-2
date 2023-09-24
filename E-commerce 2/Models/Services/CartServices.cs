@@ -124,7 +124,11 @@ namespace E_commerce_2.Models.Services
             await _context.SaveChangesAsync();
         }
 
-
+        public async Task RemoveCartProducts(IEnumerable<CartProduct> cartProduct) 
+        {
+            _context.CartsProducts.RemoveRange(cartProduct);
+            await _context.SaveChangesAsync();
+        }
         public async Task<List<CartDTO>> GetCarts()
         {
             var carts = await _context.Carts
