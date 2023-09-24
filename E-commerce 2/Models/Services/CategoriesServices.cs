@@ -111,9 +111,6 @@ namespace E_commerce_2.Models.Services
             }
         }
 
-
-
-
         public async Task<Categories> GetCategoryWithProducts(int categoryId)
         {
             return await _context.Categories
@@ -121,7 +118,6 @@ namespace E_commerce_2.Models.Services
                     .ThenInclude(cp => cp.product)
                 .SingleOrDefaultAsync(c => c.Id == categoryId);
         }
-
 
         public async Task<Categories> Create(Categories categories, IFormFile file)
         {
@@ -161,7 +157,6 @@ namespace E_commerce_2.Models.Services
             }
 
         }
-
         
         public  async Task<List<Categories>> GetCategories()
         {

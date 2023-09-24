@@ -1,4 +1,5 @@
 ﻿using E_commerce_2.Auth.Models;
+using E_commerce_2.Models;
 using E_commerce_2.Models.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,10 +22,14 @@ namespace E_commerce_2.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var userId = _userManager.GetUserId((ClaimsPrincipal)User);
+            var cart = new Cart
+            {
+                UserId = userId
+            };
+            await _cart.Create(cart);
             var cartItems = await _cart.GetCartProductByUserId(userId);
-            int cartItemCount = cartItems.Count();
 
-            return View(cartItemCount);
+            return View(cartItems);
         }
 
     }

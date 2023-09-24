@@ -1,0 +1,35 @@
+﻿@page "{id?}"
+@model E_commerce_2.Pages.Orders.DetailModel
+@{
+}
+
+
+
+<div class="container" style="padding:65px">
+    <h1>Order Details</h1>
+    <table class="table text-center">
+        <thead>
+            <tr>
+                <th> @Html.DisplayNameFor(model => model.OrderItems.FirstOrDefault().Product.ImageURL) </th>
+                <th> @Html.DisplayNameFor(model => model.OrderItems.FirstOrDefault().Product.Name) </th>
+                <th> @Html.DisplayNameFor(model => model.OrderItems.FirstOrDefault().Product.Price) </th>
+                <th> @Html.DisplayNameFor(model => model.OrderItems.FirstOrDefault().Quantity) </th>
+                <th> @Html.DisplayNameFor(model => model.OrderItems.FirstOrDefault().Product.Description) </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var orderItem in Model.OrderItems)
+            {
+                <tr>
+                    <td>
+                        <img src="@orderItem.Product.ImageURL" width="100" height="100" />
+                    </td>
+                    <td> @orderItem.Product.Name </td>
+                    <td> @orderItem.Product.Price </td>
+                    <td> @orderItem.Quantity </td>
+                    <td class="text-center"> @orderItem.Product.Description </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

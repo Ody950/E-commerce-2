@@ -58,11 +58,11 @@ namespace E_commerce_2.Data
             modelBuilder.Entity<OrderProduct>().HasKey
             (x => new
             {
-                x.OrderId,
-                x.ProductId
+                x.OrderID,
+                x.ProductID
             });
 
-            
+
 
 
             modelBuilder.Entity<Product>().HasData(

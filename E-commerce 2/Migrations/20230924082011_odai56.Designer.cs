@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_commerce_2.Migrations
 {
     [DbContext(typeof(TheMarketDBContext))]
-    [Migration("20230903141456_odai7")]
-    partial class odai7
+    [Migration("20230924082011_odai56")]
+    partial class odai56
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -104,8 +104,9 @@ namespace E_commerce_2.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -118,6 +119,9 @@ namespace E_commerce_2.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("CartId", "ProductId");
@@ -207,7 +211,7 @@ namespace E_commerce_2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Stat")
+                    b.Property<string>("State")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -218,11 +222,13 @@ namespace E_commerce_2.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Zip")
-                        .HasColumnType("int");
+                    b.Property<string>("Zip")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -231,15 +237,21 @@ namespace E_commerce_2.Migrations
 
             modelBuilder.Entity("E_commerce_2.Models.OrderProduct", b =>
                 {
-                    b.Property<int>("OrderId")
+                    b.Property<int>("OrderID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ProductID")
                         .HasColumnType("int");
 
-                    b.HasKey("OrderId", "ProductId");
+                    b.Property<int>("ID")
+                        .HasColumnType("int");
 
-                    b.HasIndex("ProductId");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderID", "ProductID");
+
+                    b.HasIndex("ProductID");
 
                     b.ToTable("OrdersProducts");
                 });
@@ -267,8 +279,8 @@ namespace E_commerce_2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -282,7 +294,7 @@ namespace E_commerce_2.Migrations
                             Description = "1111111111111111",
                             ImageURL = "https://odai.core.windows.net/images/.jpg",
                             Name = "Name1",
-                            Price = 5m
+                            Price = 5.0
                         },
                         new
                         {
@@ -291,7 +303,7 @@ namespace E_commerce_2.Migrations
                             Description = "2222222222222222",
                             ImageURL = "https://odai.core.windows.net/images/.jpg",
                             Name = "Name2",
-                            Price = 10m
+                            Price = 10.0
                         },
                         new
                         {
@@ -300,7 +312,7 @@ namespace E_commerce_2.Migrations
                             Description = "3333333333333333333",
                             ImageURL = "https://odai.core.windows.net/images/.jpg",
                             Name = "Name3 ",
-                            Price = 15m
+                            Price = 15.0
                         });
                 });
 
@@ -329,6 +341,29 @@ namespace E_commerce_2.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "administrator",
+                            ConcurrencyStamp = "00000000-0000-0000-0000-000000000000",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        },
+                        new
+                        {
+                            Id = "editor",
+                            ConcurrencyStamp = "00000000-0000-0000-0000-000000000000",
+                            Name = "Editor",
+                            NormalizedName = "EDITOR"
+                        },
+                        new
+                        {
+                            Id = "users",
+                            ConcurrencyStamp = "00000000-0000-0000-0000-000000000000",
+                            Name = "Users",
+                            NormalizedName = "USERS"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -477,21 +512,21 @@ namespace E_commerce_2.Migrations
 
             modelBuilder.Entity("E_commerce_2.Models.OrderProduct", b =>
                 {
-                    b.HasOne("E_commerce_2.Models.Order", "order")
+                    b.HasOne("E_commerce_2.Models.Order", "Order")
                         .WithMany("orderProduct")
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("OrderID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_commerce_2.Models.Product", "product")
+                    b.HasOne("E_commerce_2.Models.Product", "Product")
                         .WithMany("orderProduct")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("order");
+                    b.Navigation("Order");
 
-                    b.Navigation("product");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
