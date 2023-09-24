@@ -69,10 +69,9 @@ namespace E_commerce_2.Pages.Receipt
 
                 string subject = "Purhcase Summary From Cosmetic Store!";
                 string message =
-                    $"<p>Hello {user.UserName},</p>" +
-                    $"<p>&nbsp;</p>" +
-                    $"<p>Below is your recent purchase summary</p>" +
-                    $"<p>Total: ${finalCost.ToString("F")}\n</p>" + "<a href=\"https://e-commerce2.azurewebsites.net/\">Click here to shop more!<a>";
+                    $"Hello {user.UserName}" +
+                    $" the Below is your recent purchase summary," +
+                    $" The Total: ${finalCost.ToString("F")}\n" + "https://e-commerce2.azurewebsites.net/\" Click here to shop more!";
 
                 await _email.SendEmailAsync(user.Email, subject, message);
                 foreach (var item in orderProducts)
