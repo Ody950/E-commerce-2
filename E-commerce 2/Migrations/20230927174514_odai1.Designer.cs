@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_commerce_2.Migrations
 {
     [DbContext(typeof(TheMarketDBContext))]
-    [Migration("20230924082011_odai56")]
-    partial class odai56
+    [Migration("20230927174514_odai1")]
+    partial class odai1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

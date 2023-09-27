@@ -1,0 +1,15 @@
+﻿@page
+@model E_commerce_2.Pages.Receipt.OrderConfirmationModel
+
+@{
+    ViewData["Title"] = "Order Confirmation";
+}
+
+<div class="container">
+    <h1>Order Confirmation</h1>
+
+    <div class="alert @ViewData["OrderStatusClass"]">
+        <p>@ViewData["OrderStatusMessage"]</p>
+    </div>
+
+</div>

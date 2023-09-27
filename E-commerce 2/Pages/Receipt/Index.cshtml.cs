@@ -1,10 +1,16 @@
 using E_commerce_2.Auth.Models;
+using E_commerce_2.Auth.Models.Interface;
 using E_commerce_2.Models;
 using E_commerce_2.Models.Interface;
+using EllipticCurve.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Exchange.WebServices.Data;
+using Stripe;
+using Stripe.Checkout;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace E_commerce_2.Pages.Receipt
 {
@@ -14,22 +20,28 @@ namespace E_commerce_2.Pages.Receipt
         private readonly IEmail _email;
         private readonly ICart _cart;
         private readonly IOrder _order;
-
-        public IndexModel(UserManager<ApplicationUser> userManager, IEmail emailSender, ICart cart, IOrder order)
+        private readonly IConfiguration _configuration;
+        public IndexModel(UserManager<ApplicationUser> userManager, IEmail emailSender, ICart cart, IOrder order, IConfiguration configuration)
         {
             _userManager = userManager;
             _email = emailSender;
             _cart = cart;
             _order = order;
+            _configuration = configuration;
         }
         [BindProperty]
 
         public ReceiptInput Input { get; set; }
 
+        [BindProperty]
+        public IEnumerable<CartProduct> CartProduct { get; set; }
+
+
+
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (ModelState.IsValid)
+            try
             {
                 ApplicationUser user = await _userManager.GetUserAsync(User);
 
@@ -67,23 +79,88 @@ namespace E_commerce_2.Pages.Receipt
 
                 double finalCost = total * 1.1;
 
-                string subject = "Purhcase Summary From Cosmetic Store!";
-                string message =
-                    $"Hello {user.UserName}" +
-                    $" the Below is your recent purchase summary," +
-                    $" The Total: ${finalCost.ToString("F")}\n" + "https://e-commerce2.azurewebsites.net/\" Click here to shop more!";
 
-                await _email.SendEmailAsync(user.Email, subject, message);
-                foreach (var item in orderProducts)
+                StripeConfiguration.ApiKey = _configuration.GetSection("StripeSettings:SecretKey").Get<string>();
+
+                var domain = "https://localhost:7048/";
+
+                var options = new SessionCreateOptions
                 {
-                    await _order.CreateOrderProduct(item);
-                }
-                await _cart.RemoveCartProducts(cartItems);
+                    SuccessUrl = domain + "Receipt/OrderConfirmation",
+                    CancelUrl = domain + "TheCart/Index",
+                    LineItems = new List<SessionLineItemOptions>(),
+                    Mode = "payment",
+                };
+                foreach (var item in cartItems)
+                {
+                    var sessionLineItem = new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions()
+                        {
+                            UnitAmount = (long)(item.product.Price * 100), // 20.50 => 2050
+                            Currency = "usd",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions()
+                            {
+                                Name = item.product.Name
+                            }
+                        },
+                        Quantity = item.Quantity
+                    };
 
-                return RedirectToAction("");
+                    options.LineItems.Add(sessionLineItem);
+                }
+                bool isCompleted = true;
+                TempData["IsCompleted"] = isCompleted;
+                var service = new SessionService();
+                var session = service.Create(options);
+
+                var sessionId = session.Id;
+
+                TempData["sessionId"] = sessionId;
+
+
+                Response.Headers.Add("Location", session.Url);
+
+
+                return new StatusCodeResult(303);
             }
-            return Page();
+            catch (Exception ex)
+            {
+                TempData["IsCompleted"] = false; 
+                return Page(); 
+            }
+
+
         }
+    
+
+        public async Task<IActionResult> OnGetAsync(int id)
+        {
+            try
+            {
+                ApplicationUser user = await _userManager.GetUserAsync(User);
+
+                if (user == null)
+                {
+                    return RedirectToPage("/Error");
+                }
+
+                CartProduct = await _cart.GetCartProductByUserId(user.Id);
+
+                if (CartProduct == null)
+                {
+                    return RedirectToPage("/Error");
+                }
+
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                return RedirectToPage("/Error");
+            }
+        }
+
+
         public class ReceiptInput
         {
             [Display(Name = "Purchased Date:")]
