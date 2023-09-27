@@ -1,4 +1,5 @@
 ﻿@page
+@using E_commerce_2.Models;
 @model E_commerce_2.Pages.Receipt.IndexModel
 @{
 }
@@ -48,6 +49,39 @@
             <button type="submit" class="btn btn-outline-success">Complete Order</button>
         </div>
     </form>
+</div>
+
+
+<div class="col-12 col-lg-5 offset-lg-1">
+    <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-info">Order Summary:</span>
+    </h4>
+    <ul class="list-group mb-3" method="Get">
+        @foreach (var details in Model.CartProduct)
+        {
+            <li class="list-group-item d-flex justify-content-between">
+                <div>
+                    <h6 class="my-0">@details.product.Name</h6>
+                    <small class="text-muted">Quantity: @details.Quantity</small>
+                </div>
+                <span class="text-muted">@((details.product.Price * details.Quantity).ToString("c")) </span>
+            </li>
+        } 
+        @{
+            double subtotal = 0;
+            foreach (var orderItem in Model.CartProduct)
+            {
+                subtotal += orderItem.Quantity * orderItem.product.Price;
+            }
+        }
+        @{
+            double finalTotal = subtotal * 1.1;
+        }
+        <li class="list-group-item d-flex justify-content-between bg-light">
+            <small class="text-info">Total (USD)</small>
+            <strong class="text-info">@finalTotal.ToString("c")</strong>
+        </li>
+    </ul>
 </div>
 
 <div asp-validation-summary="All"></div>
