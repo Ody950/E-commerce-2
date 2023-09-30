@@ -3,17 +3,26 @@ using E_commerce_2.Auth.Models;
 using E_commerce_2.Auth.Models.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
+using Microsoft.AspNetCore.Identity;
+using E_commerce_2.Models.Interface;
 
 namespace E_commerce_2.Pages.Auth
 {
     public class RegisterModel : PageModel
     {
 
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmail _email;
+        private readonly IConfiguration _configuration;
+        private readonly SignInManager<ApplicationUser> _signInManager; 
         public readonly IUser _user;
 
-        public RegisterModel(IUser user)
+        public RegisterModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmail emailSender, IConfiguration configuration, IUser user)
         {
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _email = emailSender;
+            _configuration = configuration;
             _user = user;
         }
 
@@ -40,7 +49,17 @@ namespace E_commerce_2.Pages.Auth
 
             if (user != null)
             {
-                return RedirectToPage("Home");
+                var applicationUser = await _userManager.FindByEmailAsync(registerUser.Email);
+                await _signInManager.SignInAsync(applicationUser, isPersistent: false);
+                string subject = "welcome email";
+                string message =
+                    $"Hello {applicationUser.UserName}," +
+                    $"We are thrilled to extend a warm and hearty welcome to you at Japanese Shop, your new destination for a delightful Japanese shopping experience.\r\n" +
+                    "Click here to shop more: https://e-commerce2.azurewebsites.net/";
+
+                await _email.SendEmailAsync(applicationUser.Email, subject, message);
+
+                return RedirectToPage("/Home"); 
             }
             else
             {
@@ -48,7 +67,11 @@ namespace E_commerce_2.Pages.Auth
 
                 return null;
             }
+
+           
         }
+
+
     }
- 
+
 }
