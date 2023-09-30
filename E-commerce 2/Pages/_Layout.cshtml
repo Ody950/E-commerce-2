@@ -61,24 +61,20 @@
 
                     </ul>
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-white bg-dark mt-2" asp-area="" asp-controller="Home" asp-action="Privacy">AboutUS</a>
-                        </li>
+                       
                         @if (User.Identity.IsAuthenticated )
                         {
-                            
-                            <li class="nav-item order-4 ">
-                                <a class="nav-link text-white bg-dark mt-2" href="/TheCart/Index">Cart</a>
+                            <li class="nav-item">
+                                <span class="nav-link text-white bg-dark mt-2 text-yellow">Welcome, @User.Identity.Name!</span>
                             </li>
+                            
                             @if (User.IsInRole("Administrator"))
                             {
                                 <li class="nav-item order-4 ">
                                     <a class="nav-link text-white bg-dark mt-2" href="/Orders/Index">Orders</a>
                                 </li>
                             }
-@*                            <li class="nav-item">
-                                <h2><a class="nav-link" href="#" style="padding-top:10px; position:absolute; top:10px; right:100px">Hello, @UserManager.GetUserName(User)!</a></h2>
-                            </li>*@
+
                             <li class="nav-item order-4">
                                 <a class="nav-link text-white bg-dark mt-2" href="/TheCart/Index">
                                     <span class="d-inline">Cart:</span>@await Component.InvokeAsync("Cart")
@@ -91,12 +87,16 @@
                         else
                         {
                             <li class="nav-item order-4 ">
-                                <a class="nav-link text-white bg-dark mt-2" asp-controller="Auth" asp-action="Index">LogIn</a>
+                                <a class="nav-link text-white bg-dark FullBody mt-2" href="/Auth/Index">LogIn</a>
+
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white bg-dark FullBody mt-2" asp-controller="Auth" asp-action="SingUp">Register</a>
+                                <a class="nav-link text-white bg-dark FullBody mt-2" href="/Auth/Register">Register</a>
                             </li>
                         }
+                        <li class="nav-item">
+                            <a class="nav-link text-white bg-dark FullBody mt-2" href="/AboutUS/Index">AboutUS</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -107,7 +107,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2019 - AppName</p>
+            &copy; 2023 - Japan Shop - <a href="/AboutUS/Index">AboutUS</a>
         </footer>
     </div>
 
